@@ -8,7 +8,7 @@ import { loadCourses, saveCourse } from "../../redux/actions/courseActions";
 import { loadAuthors } from "../../redux/actions/authorActions";
 import { toast } from "react-toastify";
 
-function ManageCoursePage({
+export function ManageCoursePage({
   courses,
   authors,
   loadAuthors,
