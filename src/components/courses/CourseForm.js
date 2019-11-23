@@ -51,7 +51,6 @@ const CourseForm = ({
     </form>
   );
 };
-
 CourseForm.prototype = {
   course: PropTypes.object.isRequired,
   authors: PropTypes.array.isRequired,
