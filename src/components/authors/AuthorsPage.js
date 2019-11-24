@@ -56,7 +56,9 @@ export function AuthorsPage({
           >
             Add Author
           </button>
-          <AuthorList authors={authors} onDeleteClick={handleDelete} />
+          {authors.length > 0 && (
+            <AuthorList authors={authors} onDeleteClick={handleDelete} />
+          )}
         </>
       )}
     </>
