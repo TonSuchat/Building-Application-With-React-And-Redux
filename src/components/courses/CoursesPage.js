@@ -6,8 +6,9 @@ import Spinner from "../common/Spinner";
 import { loadCourses, deleteCourse } from "../../redux/actions/courseActions";
 import { loadAuthors } from "../../redux/actions/authorActions";
 import CourseList from "./CourseList";
+import SearchInput from "../common/SearchInput";
 import { toast } from "react-toastify";
-import { isLoading } from "../../helpers/utility";
+import { isLoading, objectFilter } from "../../helpers/utility";
 
 function CoursesPage({
   courses,
@@ -18,6 +19,8 @@ function CoursesPage({
   loadAuthors
 }) {
   const [redirectToAddCoursePage, setRedirectToAddCoursePage] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterCourses, setFilterCourses] = useState(courses);
 
   useEffect(() => {
     if (courses.length === 0) {
@@ -34,6 +37,20 @@ function CoursesPage({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    if (!searchQuery) setFilterCourses(courses);
+    else {
+      setFilterCourses(
+        objectFilter(courses, searchQuery, [
+          "title",
+          "authorName",
+          "slug",
+          "category"
+        ])
+      );
+    }
+  }, [searchQuery, courses]);
+
   async function handleDeleteCourse(course) {
     toast.success("Course deleted");
     try {
@@ -41,6 +58,11 @@ function CoursesPage({
     } catch (error) {
       toast.error(`Delete failed. ${error.message}`, { autoClose: false });
     }
+  }
+
+  function handleSearch(event) {
+    const { value } = event.target;
+    setSearchQuery(value);
   }
 
   return (
@@ -57,7 +79,16 @@ function CoursesPage({
           >
             Add Course
           </button>
-          <CourseList courses={courses} onDeleteClick={handleDeleteCourse} />
+          <SearchInput
+            name="search"
+            value={searchQuery}
+            onChange={handleSearch}
+            placeholder="Search courses..."
+          />
+          <CourseList
+            courses={filterCourses}
+            onDeleteClick={handleDeleteCourse}
+          />
         </>
       )}
     </>
