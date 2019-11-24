@@ -15,9 +15,9 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 12
-
+        env:
+          REACT_APP_CI: true
       - name: install
         run: npm install
-
       - name: test
         run: npm test
