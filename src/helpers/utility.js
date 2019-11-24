@@ -3,3 +3,11 @@ export function isLoading(state) {
     ? true
     : false;
 }
+
+export function objectFilter(source, query, properties) {
+  return source.filter(record => {
+    return properties.some(
+      key => record[key].toLowerCase().indexOf(query.toLowerCase()) > -1
+    );
+  });
+}
