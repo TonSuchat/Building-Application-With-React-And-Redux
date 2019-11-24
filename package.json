@@ -29,7 +29,6 @@
     "prestart:api": "node ./src/tools/createMockDb.js",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "test:ci": "react-scripts test --no-watchman",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
