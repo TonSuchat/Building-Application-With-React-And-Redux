@@ -1,8 +1,8 @@
 name: CI
 
-on: 
+on:
   pull_request:
-    branches: 
+    branches:
       - master
       - develop
 
@@ -11,7 +11,13 @@ jobs:
     name: Run tests when pull request is trigger
     runs-on: [ubuntu-latest]
     steps:
-      - name: npm install, test
-        run: |
-          npm install
-          npm test
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+
+      - name: install
+        run: npm install
+
+      - name: test
+        run: npm test
