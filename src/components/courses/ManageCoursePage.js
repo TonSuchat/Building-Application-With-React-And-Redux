@@ -6,6 +6,7 @@ import Spinner from "../common/Spinner";
 import { newCourse } from "../../tools/mockData";
 import { loadCourses, saveCourse } from "../../redux/actions/courseActions";
 import { loadAuthors } from "../../redux/actions/authorActions";
+import { Prompt } from "react-router";
 import { toast } from "react-toastify";
 
 export function ManageCoursePage({
@@ -20,6 +21,7 @@ export function ManageCoursePage({
   const [course, setCourse] = useState({ ...props.course });
   const [saving, setSaving] = useState(false);
   const [errors, setErrors] = useState({});
+  const [isEdited, setIsEdited] = useState(false);
 
   useEffect(() => {
     if (courses.length === 0) {
@@ -39,6 +41,7 @@ export function ManageCoursePage({
   }, [props.course]);
 
   function handleChange(event) {
+    setIsEdited(true);
     const { name, value } = event.target;
     setCourse(prevCourse => ({
       ...prevCourse,
@@ -77,14 +80,20 @@ export function ManageCoursePage({
       {courses.length === 0 || authors.length === 0 ? (
         <Spinner />
       ) : (
-        <CourseForm
-          course={course}
-          authors={authors}
-          errors={errors}
-          onSave={handleSaveCourse}
-          onChange={handleChange}
-          saving={saving}
-        />
+        <>
+          <Prompt
+            when={isEdited && !saving}
+            message="You have unsaved data, Discard changes?"
+          />
+          <CourseForm
+            course={course}
+            authors={authors}
+            errors={errors}
+            onSave={handleSaveCourse}
+            onChange={handleChange}
+            saving={saving}
+          />
+        </>
       )}
     </>
   );
