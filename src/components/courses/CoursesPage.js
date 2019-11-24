@@ -85,10 +85,12 @@ function CoursesPage({
             onChange={handleSearch}
             placeholder="Search courses..."
           />
-          <CourseList
-            courses={filterCourses}
-            onDeleteClick={handleDeleteCourse}
-          />
+          {filterCourses.length > 0 && (
+            <CourseList
+              courses={filterCourses}
+              onDeleteClick={handleDeleteCourse}
+            />
+          )}
         </>
       )}
     </>
