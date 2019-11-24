@@ -51,7 +51,7 @@ const CourseList = ({ courses, onDeleteClick }) => (
   </table>
 );
 
-CourseList.prototype = {
+CourseList.propTypes = {
   courses: PropTypes.array.isRequired,
   onDeleteClick: PropTypes.func.isRequired
 };

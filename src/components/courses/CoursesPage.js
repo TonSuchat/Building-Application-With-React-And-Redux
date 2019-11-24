@@ -7,6 +7,7 @@ import { loadCourses, deleteCourse } from "../../redux/actions/courseActions";
 import { loadAuthors } from "../../redux/actions/authorActions";
 import CourseList from "./CourseList";
 import { toast } from "react-toastify";
+import { isLoading } from "../../helpers/utility";
 
 function CoursesPage({
   courses,
@@ -86,7 +87,7 @@ const mapStateToProps = state => {
             };
           }),
     authors: state.authors,
-    loading: state.apiCallInProgress > 0
+    loading: isLoading(state)
   };
 };
 
