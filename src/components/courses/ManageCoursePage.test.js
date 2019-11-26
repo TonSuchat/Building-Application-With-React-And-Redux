@@ -4,18 +4,19 @@ import { authors, newCourse, courses } from "../../tools/mockData";
 import { MemoryRouter } from "react-router-dom";
 import { ManageCoursePage } from "./ManageCoursePage";
 
-function render(args) {
-  const defaultProps = {
-    courses,
-    authors,
-    loadAuthors: jest.fn(),
-    loadCourses: jest.fn(),
-    saveCourse: jest.fn(),
-    course: newCourse,
-    history: {},
-    match: {}
-  };
+const defaultProps = {
+  courses,
+  authors,
+  loadAuthors: jest.fn(),
+  loadCourses: jest.fn(),
+  saveCourse: jest.fn(),
+  course: newCourse,
+  history: {},
+  match: {},
+  isFoundData: true
+};
 
+function render(args) {
   const props = { ...defaultProps, ...args };
   return mount(
     <MemoryRouter>

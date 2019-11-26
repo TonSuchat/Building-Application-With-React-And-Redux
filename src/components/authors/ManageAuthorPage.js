@@ -6,12 +6,14 @@ import Spinner from "../common/Spinner";
 import { newAuthor } from "../../tools/mockData";
 import { loadAuthors, saveAuthor } from "../../redux/actions/authorActions";
 import { toast } from "react-toastify";
+import DataNotFound from "../common/DataNotFound";
 
 export function ManageAuthorPage({
   authors,
   loadAuthors,
   saveAuthor,
   history,
+  isFoundData,
   ...props
 }) {
   const [author, setAuthor] = useState({ ...props.author });
@@ -62,7 +64,7 @@ export function ManageAuthorPage({
     <>
       {authors.length === 0 ? (
         <Spinner />
-      ) : (
+      ) : isFoundData ? (
         <AuthorForm
           author={author}
           onSave={handleSave}
@@ -70,6 +72,8 @@ export function ManageAuthorPage({
           saving={saving}
           errors={errors}
         />
+      ) : (
+        <DataNotFound />
       )}
     </>
   );
@@ -79,7 +83,8 @@ ManageAuthorPage.propTypes = {
   authors: PropTypes.array.isRequired,
   loadAuthors: PropTypes.func.isRequired,
   saveAuthor: PropTypes.func.isRequired,
-  history: PropTypes.object.isRequired
+  history: PropTypes.object.isRequired,
+  isFoundData: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -88,9 +93,16 @@ const mapStateToProps = (state, ownProps) => {
     id && state.authors.length > 0
       ? state.authors.find(author => author.id === +id)
       : newAuthor;
+  const isFoundData =
+    id && state.authors.length > 0
+      ? state.authors.find(author => author.id === +id)
+        ? true
+        : false
+      : true;
   return {
     author,
-    authors: state.authors
+    authors: state.authors,
+    isFoundData
   };
 };
 
