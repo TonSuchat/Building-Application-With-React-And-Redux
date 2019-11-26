@@ -8,6 +8,7 @@ import { loadCourses, saveCourse } from "../../redux/actions/courseActions";
 import { loadAuthors } from "../../redux/actions/authorActions";
 import { Prompt } from "react-router";
 import { toast } from "react-toastify";
+import DataNotFound from "../common/DataNotFound";
 
 export function ManageCoursePage({
   courses,
@@ -16,6 +17,7 @@ export function ManageCoursePage({
   loadCourses,
   saveCourse,
   history,
+  isFoundData,
   ...props
 }) {
   const [course, setCourse] = useState({ ...props.course });
@@ -85,14 +87,18 @@ export function ManageCoursePage({
             when={isEdited && !saving}
             message="You have unsaved data, Discard changes?"
           />
-          <CourseForm
-            course={course}
-            authors={authors}
-            errors={errors}
-            onSave={handleSaveCourse}
-            onChange={handleChange}
-            saving={saving}
-          />
+          {isFoundData ? (
+            <CourseForm
+              course={course}
+              authors={authors}
+              errors={errors}
+              onSave={handleSaveCourse}
+              onChange={handleChange}
+              saving={saving}
+            />
+          ) : (
+            <DataNotFound />
+          )}
         </>
       )}
     </>
@@ -106,7 +112,8 @@ ManageCoursePage.propTypes = {
   loadCourses: PropTypes.func.isRequired,
   saveCourse: PropTypes.func.isRequired,
   loadAuthors: PropTypes.func.isRequired,
-  history: PropTypes.object.isRequired
+  history: PropTypes.object.isRequired,
+  isFoundData: PropTypes.bool.isRequired
 };
 
 export function getCourseBySlug(courses, slug) {
@@ -119,10 +126,17 @@ const mapStateToProps = (state, ownProps) => {
     slug && state.courses.length > 0
       ? getCourseBySlug(state.courses, slug)
       : newCourse;
+  const isFoundData =
+    slug && state.courses.length > 0
+      ? getCourseBySlug(state.courses, slug)
+        ? true
+        : false
+      : true;
   return {
     course,
     courses: state.courses,
-    authors: state.authors
+    authors: state.authors,
+    isFoundData
   };
 };
 
