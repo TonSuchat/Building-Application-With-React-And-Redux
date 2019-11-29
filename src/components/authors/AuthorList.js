@@ -4,37 +4,44 @@ import { Link } from "react-router-dom";
 
 export default function AuthorList({ authors, onDeleteClick }) {
   return (
-    <table className="table">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Total course</th>
-          <th />
-        </tr>
-      </thead>
-      <tbody>
-        {authors
-          ? authors.map(author => {
-              return (
-                <tr key={author.id}>
-                  <td>
-                    <Link to={`/author/${author.id}`}>{author.name}</Link>
-                  </td>
-                  <td>{author.totalCourse}</td>
-                  <td>
-                    <button
-                      className="btn btn-outline-danger btn-sm"
-                      onClick={() => onDeleteClick(author)}
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              );
-            })
-          : null}
-      </tbody>
-    </table>
+    <>
+      <div className="row">
+        <div className="col-12">
+          <p>Total: {authors.length} records</p>
+        </div>
+      </div>
+      <table className="table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Total course</th>
+            <th />
+          </tr>
+        </thead>
+        <tbody>
+          {authors
+            ? authors.map(author => {
+                return (
+                  <tr key={author.id}>
+                    <td>
+                      <Link to={`/author/${author.id}`}>{author.name}</Link>
+                    </td>
+                    <td>{author.totalCourse}</td>
+                    <td>
+                      <button
+                        className="btn btn-outline-danger btn-sm"
+                        onClick={() => onDeleteClick(author)}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })
+            : null}
+        </tbody>
+      </table>
+    </>
   );
 }
 
