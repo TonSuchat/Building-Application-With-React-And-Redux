@@ -2,11 +2,11 @@ import React from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
-const CourseList = ({ courses, onDeleteClick }) => (
+const CourseList = ({ displayCourses, totalCourse, onDeleteClick }) => (
   <>
     <div className="row mt-3">
       <div className="col-12">
-        <p>Total: {courses.length} records</p>
+        <p>Total: {totalCourse} records</p>
       </div>
     </div>
     <table className="table">
@@ -20,8 +20,8 @@ const CourseList = ({ courses, onDeleteClick }) => (
         </tr>
       </thead>
       <tbody>
-        {courses
-          ? courses.map(course => {
+        {displayCourses
+          ? displayCourses.map(course => {
               return (
                 <tr key={course.id}>
                   <td>
@@ -59,7 +59,8 @@ const CourseList = ({ courses, onDeleteClick }) => (
 );
 
 CourseList.propTypes = {
-  courses: PropTypes.array.isRequired,
+  displayCourses: PropTypes.array.isRequired,
+  totalCourse: PropTypes.number.isRequired,
   onDeleteClick: PropTypes.func.isRequired
 };
 

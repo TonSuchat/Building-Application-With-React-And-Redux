@@ -4,8 +4,11 @@ import { courses } from "../../tools/mockData";
 import { MemoryRouter } from "react-router-dom";
 import CourseList from "./CourseList";
 
+const pageSize = 5;
+
 const defaultProps = {
-  courses,
+  displayCourses: courses.slice(0, pageSize),
+  totalCourse: courses.length,
   onDeleteClick: jest.fn()
 };
 
