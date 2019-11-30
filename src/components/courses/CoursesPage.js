@@ -6,11 +6,12 @@ import Spinner from "../common/Spinner";
 import { loadCourses, deleteCourse } from "../../redux/actions/courseActions";
 import { loadAuthors } from "../../redux/actions/authorActions";
 import CourseList from "./CourseList";
+import Pagination from "../common/Pagination";
 import SearchInput from "../common/SearchInput";
 import { toast } from "react-toastify";
 import { isLoading, objectFilter } from "../../helpers/utility";
 
-function CoursesPage({
+export function CoursesPage({
   courses,
   authors,
   loading,
@@ -18,9 +19,11 @@ function CoursesPage({
   deleteCourse,
   loadAuthors
 }) {
+  const pageSize = 5;
   const [redirectToAddCoursePage, setRedirectToAddCoursePage] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterCourses, setFilterCourses] = useState(courses);
+  const [displayCourses, setDisplayCourses] = useState(courses);
 
   useEffect(() => {
     if (courses.length === 0) {
@@ -51,6 +54,10 @@ function CoursesPage({
     }
   }, [searchQuery, courses]);
 
+  useEffect(() => {
+    getCoursesByPage(filterCourses, 1);
+  }, [filterCourses]);
+
   async function handleDeleteCourse(course) {
     toast.success("Course deleted");
     try {
@@ -63,6 +70,10 @@ function CoursesPage({
   function handleSearch(event) {
     const { value } = event.target;
     setSearchQuery(value);
+  }
+
+  function getCoursesByPage(courses, page) {
+    setDisplayCourses(courses.slice(pageSize * (page - 1), pageSize * page));
   }
 
   return (
@@ -85,11 +96,21 @@ function CoursesPage({
             onChange={handleSearch}
             placeholder="Search courses..."
           />
-          {filterCourses.length > 0 && (
-            <CourseList
-              courses={filterCourses}
-              onDeleteClick={handleDeleteCourse}
-            />
+          {displayCourses.length > 0 && (
+            <>
+              <CourseList
+                displayCourses={displayCourses}
+                totalCourse={filterCourses.length}
+                onDeleteClick={handleDeleteCourse}
+              />
+              <Pagination
+                dataLength={filterCourses.length}
+                pageSize={pageSize}
+                onPaginationClicked={page =>
+                  getCoursesByPage(filterCourses, page)
+                }
+              />
+            </>
           )}
         </>
       )}
