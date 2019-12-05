@@ -5,7 +5,8 @@ import { MemoryRouter } from "react-router-dom";
 import AuthorList from "./AuthorList";
 
 const defaultProps = {
-  authors,
+  displayAuthors: authors,
+  totalAuthors: authors.length,
   onDeleteClick: jest.fn()
 };
 

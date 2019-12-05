@@ -2,12 +2,16 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 
-export default function AuthorList({ authors, onDeleteClick }) {
+export default function AuthorList({
+  displayAuthors,
+  totalAuthors,
+  onDeleteClick
+}) {
   return (
     <>
       <div className="row">
         <div className="col-12">
-          <p>Total: {authors.length} records</p>
+          <p>Total: {totalAuthors} records</p>
         </div>
       </div>
       <table className="table">
@@ -19,8 +23,8 @@ export default function AuthorList({ authors, onDeleteClick }) {
           </tr>
         </thead>
         <tbody>
-          {authors
-            ? authors.map(author => {
+          {displayAuthors
+            ? displayAuthors.map(author => {
                 return (
                   <tr key={author.id}>
                     <td>
@@ -46,6 +50,7 @@ export default function AuthorList({ authors, onDeleteClick }) {
 }
 
 AuthorList.propTypes = {
-  authors: PropTypes.array.isRequired,
+  displayAuthors: PropTypes.array.isRequired,
+  totalAuthors: PropTypes.number.isRequired,
   onDeleteClick: PropTypes.func.isRequired
 };

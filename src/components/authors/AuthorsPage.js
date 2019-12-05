@@ -5,7 +5,7 @@ import { loadCourses } from "../../redux/actions/courseActions";
 import { loadAuthors, deleteAuthor } from "../../redux/actions/authorActions";
 import Spinner from "../common/Spinner";
 import { Redirect } from "react-router-dom";
-import AuthorList from "./AuthorList";
+import CustomList from "../common/CustomList";
 import { isLoading } from "../../helpers/utility";
 import { toast } from "react-toastify";
 
@@ -57,7 +57,12 @@ export function AuthorsPage({
             Add Author
           </button>
           {authors.length > 0 && (
-            <AuthorList authors={authors} onDeleteClick={handleDelete} />
+            <CustomList
+              data={authors}
+              dataType="Author"
+              handleDeleteData={handleDelete}
+              filterProps={["name"]}
+            />
           )}
         </>
       )}
