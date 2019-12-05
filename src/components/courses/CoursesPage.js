@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Redirect } from "react-router-dom";
@@ -22,8 +22,7 @@ export function CoursesPage({
   const pageSize = 5;
   const [redirectToAddCoursePage, setRedirectToAddCoursePage] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [filterCourses, setFilterCourses] = useState(courses);
-  const [displayCourses, setDisplayCourses] = useState(courses);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     if (courses.length === 0) {
@@ -40,23 +39,22 @@ export function CoursesPage({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    if (!searchQuery) setFilterCourses(courses);
-    else {
-      setFilterCourses(
-        objectFilter(courses, searchQuery, [
-          "title",
-          "authorName",
-          "slug",
-          "category"
-        ])
-      );
-    }
-  }, [searchQuery, courses]);
+  const courseFilterMemo = useMemo(
+    () =>
+      objectFilter(courses, searchQuery, [
+        "title",
+        "authorName",
+        "slug",
+        "category"
+      ]),
+    [courses, searchQuery]
+  );
+  const filterCourses = !searchQuery ? courses : courseFilterMemo;
 
-  useEffect(() => {
-    getCoursesByPage(filterCourses, 1);
-  }, [filterCourses]);
+  const displayCourses = filterCourses.slice(
+    pageSize * (page - 1),
+    pageSize * page
+  );
 
   async function handleDeleteCourse(course) {
     toast.success("Course deleted");
@@ -65,15 +63,6 @@ export function CoursesPage({
     } catch (error) {
       toast.error(`Delete failed. ${error.message}`, { autoClose: false });
     }
-  }
-
-  function handleSearch(event) {
-    const { value } = event.target;
-    setSearchQuery(value);
-  }
-
-  function getCoursesByPage(courses, page) {
-    setDisplayCourses(courses.slice(pageSize * (page - 1), pageSize * page));
   }
 
   return (
@@ -93,7 +82,7 @@ export function CoursesPage({
           <SearchInput
             name="search"
             value={searchQuery}
-            onChange={handleSearch}
+            onChange={e => setSearchQuery(e.target.value)}
             placeholder="Search courses..."
           />
           {displayCourses.length > 0 && (
@@ -106,9 +95,7 @@ export function CoursesPage({
               <Pagination
                 dataLength={filterCourses.length}
                 pageSize={pageSize}
-                onPaginationClicked={page =>
-                  getCoursesByPage(filterCourses, page)
-                }
+                onPaginationClicked={page => setPage(page)}
               />
             </>
           )}
