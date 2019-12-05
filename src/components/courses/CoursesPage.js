@@ -1,15 +1,13 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Redirect } from "react-router-dom";
 import Spinner from "../common/Spinner";
 import { loadCourses, deleteCourse } from "../../redux/actions/courseActions";
 import { loadAuthors } from "../../redux/actions/authorActions";
-import CourseList from "./CourseList";
-import Pagination from "../common/Pagination";
-import SearchInput from "../common/SearchInput";
+import CustomList from "../common/CustomList";
 import { toast } from "react-toastify";
-import { isLoading, objectFilter } from "../../helpers/utility";
+import { isLoading } from "../../helpers/utility";
 
 export function CoursesPage({
   courses,
@@ -19,10 +17,7 @@ export function CoursesPage({
   deleteCourse,
   loadAuthors
 }) {
-  const pageSize = 5;
   const [redirectToAddCoursePage, setRedirectToAddCoursePage] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [page, setPage] = useState(1);
 
   useEffect(() => {
     if (courses.length === 0) {
@@ -38,23 +33,6 @@ export function CoursesPage({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const courseFilterMemo = useMemo(
-    () =>
-      objectFilter(courses, searchQuery, [
-        "title",
-        "authorName",
-        "slug",
-        "category"
-      ]),
-    [courses, searchQuery]
-  );
-  const filterCourses = !searchQuery ? courses : courseFilterMemo;
-
-  const displayCourses = filterCourses.slice(
-    pageSize * (page - 1),
-    pageSize * page
-  );
 
   async function handleDeleteCourse(course) {
     toast.success("Course deleted");
@@ -79,26 +57,12 @@ export function CoursesPage({
           >
             Add Course
           </button>
-          <SearchInput
-            name="search"
-            value={searchQuery}
-            onChange={e => setSearchQuery(e.target.value)}
-            placeholder="Search courses..."
+          <CustomList
+            data={courses}
+            dataType="Course"
+            handleDeleteData={handleDeleteCourse}
+            filterProps={["title", "authorName", "slug", "category"]}
           />
-          {displayCourses.length > 0 && (
-            <>
-              <CourseList
-                displayCourses={displayCourses}
-                totalCourse={filterCourses.length}
-                onDeleteClick={handleDeleteCourse}
-              />
-              <Pagination
-                dataLength={filterCourses.length}
-                pageSize={pageSize}
-                onPaginationClicked={page => setPage(page)}
-              />
-            </>
-          )}
         </>
       )}
     </>
