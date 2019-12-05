@@ -6,7 +6,9 @@ import Spinner from "../common/Spinner";
 import { newCourse } from "../../tools/mockData";
 import { loadCourses, saveCourse } from "../../redux/actions/courseActions";
 import { loadAuthors } from "../../redux/actions/authorActions";
+import { Prompt } from "react-router";
 import { toast } from "react-toastify";
+import DataNotFound from "../common/DataNotFound";
 
 export function ManageCoursePage({
   courses,
@@ -15,11 +17,13 @@ export function ManageCoursePage({
   loadCourses,
   saveCourse,
   history,
+  isFoundData,
   ...props
 }) {
   const [course, setCourse] = useState({ ...props.course });
   const [saving, setSaving] = useState(false);
   const [errors, setErrors] = useState({});
+  const [isEdited, setIsEdited] = useState(false);
 
   useEffect(() => {
     if (courses.length === 0) {
@@ -39,6 +43,7 @@ export function ManageCoursePage({
   }, [props.course]);
 
   function handleChange(event) {
+    setIsEdited(true);
     const { name, value } = event.target;
     setCourse(prevCourse => ({
       ...prevCourse,
@@ -77,14 +82,24 @@ export function ManageCoursePage({
       {courses.length === 0 || authors.length === 0 ? (
         <Spinner />
       ) : (
-        <CourseForm
-          course={course}
-          authors={authors}
-          errors={errors}
-          onSave={handleSaveCourse}
-          onChange={handleChange}
-          saving={saving}
-        />
+        <>
+          <Prompt
+            when={isEdited && !saving}
+            message="You have unsaved data, Discard changes?"
+          />
+          {isFoundData ? (
+            <CourseForm
+              course={course}
+              authors={authors}
+              errors={errors}
+              onSave={handleSaveCourse}
+              onChange={handleChange}
+              saving={saving}
+            />
+          ) : (
+            <DataNotFound />
+          )}
+        </>
       )}
     </>
   );
@@ -97,7 +112,8 @@ ManageCoursePage.propTypes = {
   loadCourses: PropTypes.func.isRequired,
   saveCourse: PropTypes.func.isRequired,
   loadAuthors: PropTypes.func.isRequired,
-  history: PropTypes.object.isRequired
+  history: PropTypes.object.isRequired,
+  isFoundData: PropTypes.bool.isRequired
 };
 
 export function getCourseBySlug(courses, slug) {
@@ -110,10 +126,17 @@ const mapStateToProps = (state, ownProps) => {
     slug && state.courses.length > 0
       ? getCourseBySlug(state.courses, slug)
       : newCourse;
+  const isFoundData =
+    slug && state.courses.length > 0
+      ? getCourseBySlug(state.courses, slug)
+        ? true
+        : false
+      : true;
   return {
     course,
     courses: state.courses,
-    authors: state.authors
+    authors: state.authors,
+    isFoundData
   };
 };
 
