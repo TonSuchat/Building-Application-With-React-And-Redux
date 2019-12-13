@@ -1,4 +1,4 @@
-import { isLoading, objectFilter } from "./utility";
+import { isLoading, objectFilter, customSort } from "./utility";
 
 it("should return loading when apiCall more than 0", () => {
   const state = { apiCallInProgress: 1 };
@@ -31,4 +31,20 @@ it("should filter data properly", () => {
   query = "wri";
   result = objectFilter(source, query, properties);
   expect(result.length).toEqual(1);
+});
+
+it("should sort data properly", () => {
+  const source = [
+    { id: 1, name: "a" },
+    { id: 2, name: "b" },
+    { id: 3, name: "c" }
+  ];
+  let result = customSort(source, "id", true);
+  expect(result).toEqual(source);
+  result = customSort(source, "name", false);
+  expect(result).toEqual([
+    { id: 3, name: "c" },
+    { id: 2, name: "b" },
+    { id: 1, name: "a" }
+  ]);
 });

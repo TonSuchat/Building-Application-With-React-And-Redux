@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from "react";
 import SearchInput from "./SearchInput";
 import Pagination from "./Pagination";
-import { objectFilter } from "../../helpers/utility";
+import { objectFilter, customSort } from "../../helpers/utility";
 import CourseList from "../courses/CourseList";
 import AuthorList from "../authors/AuthorList";
 
@@ -9,17 +9,26 @@ const CustomList = ({ data, dataType, handleDeleteData, filterProps }) => {
   const pageSize = 5;
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);
+  const [sortBy, setSortBy] = useState({ key: "id", asc: true });
 
   const dataFilterMemo = useMemo(
     () => objectFilter(data, searchQuery, filterProps),
     [data, searchQuery, filterProps]
   );
-  const filterDatas = !searchQuery ? data : dataFilterMemo;
+  const filterDatas = customSort(
+    !searchQuery ? data : dataFilterMemo,
+    sortBy.key,
+    sortBy.asc
+  );
 
   const displayDatas = filterDatas.slice(
     pageSize * (page - 1),
     pageSize * page
   );
+
+  const handleTHClick = key => {
+    setSortBy({ key, asc: sortBy.key === key ? !sortBy.asc : true });
+  };
 
   return (
     <>
@@ -36,6 +45,7 @@ const CustomList = ({ data, dataType, handleDeleteData, filterProps }) => {
               displayCourses={displayDatas}
               totalCourse={filterDatas.length}
               onDeleteClick={handleDeleteData}
+              onTHClick={handleTHClick}
             />
           )}
           {dataType === "Author" && (
@@ -43,6 +53,7 @@ const CustomList = ({ data, dataType, handleDeleteData, filterProps }) => {
               displayAuthors={displayDatas}
               totalAuthors={filterDatas.length}
               onDeleteClick={handleDeleteData}
+              onTHClick={handleTHClick}
             />
           )}
           <Pagination

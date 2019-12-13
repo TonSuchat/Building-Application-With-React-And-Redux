@@ -1,11 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
+import "../common/tableList.css";
 
 export default function AuthorList({
   displayAuthors,
   totalAuthors,
-  onDeleteClick
+  onDeleteClick,
+  onTHClick
 }) {
   return (
     <>
@@ -14,11 +16,11 @@ export default function AuthorList({
           <p>Total: {totalAuthors} records</p>
         </div>
       </div>
-      <table className="table">
+      <table className="table table-list">
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Total course</th>
+            <th onClick={() => onTHClick("name")}>Name</th>
+            <th onClick={() => onTHClick("totalCourse")}>Total course</th>
             <th />
           </tr>
         </thead>
@@ -52,5 +54,6 @@ export default function AuthorList({
 AuthorList.propTypes = {
   displayAuthors: PropTypes.array.isRequired,
   totalAuthors: PropTypes.number.isRequired,
-  onDeleteClick: PropTypes.func.isRequired
+  onDeleteClick: PropTypes.func.isRequired,
+  onTHClick: PropTypes.func.isRequired
 };

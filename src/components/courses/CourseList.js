@@ -1,21 +1,27 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
+import "../common/tableList.css";
 
-const CourseList = ({ displayCourses, totalCourse, onDeleteClick }) => (
+const CourseList = ({
+  displayCourses,
+  totalCourse,
+  onDeleteClick,
+  onTHClick
+}) => (
   <>
     <div className="row mt-3">
       <div className="col-12">
         <p>Total: {totalCourse} records</p>
       </div>
     </div>
-    <table className="table">
+    <table className="table table-list">
       <thead>
         <tr>
-          <th />
-          <th>Title</th>
-          <th>Author</th>
-          <th>Category</th>
+          <th onClick={() => onTHClick("id")} />
+          <th onClick={() => onTHClick("slug")}>Title</th>
+          <th onClick={() => onTHClick("authorName")}>Author</th>
+          <th onClick={() => onTHClick("category")}>Category</th>
           <th />
         </tr>
       </thead>
@@ -61,7 +67,8 @@ const CourseList = ({ displayCourses, totalCourse, onDeleteClick }) => (
 CourseList.propTypes = {
   displayCourses: PropTypes.array.isRequired,
   totalCourse: PropTypes.number.isRequired,
-  onDeleteClick: PropTypes.func.isRequired
+  onDeleteClick: PropTypes.func.isRequired,
+  onTHClick: PropTypes.func.isRequired
 };
 
 export default CourseList;
