@@ -11,3 +11,19 @@ export function objectFilter(source, query, properties) {
     );
   });
 }
+
+export function customSort(source, key, isAscending = true) {
+  return isAscending
+    ? source.sort((a, b) => {
+        return innerSort(a[key], b[key]);
+      })
+    : source.sort((a, b) => {
+        return innerSort(b[key], a[key]);
+      });
+}
+
+function innerSort(a, b) {
+  if (a > b) return 1;
+  else if (a < b) return -1;
+  else return 0;
+}

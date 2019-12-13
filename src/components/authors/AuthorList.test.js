@@ -7,7 +7,8 @@ import AuthorList from "./AuthorList";
 const defaultProps = {
   displayAuthors: authors,
   totalAuthors: authors.length,
-  onDeleteClick: jest.fn()
+  onDeleteClick: jest.fn(),
+  onTHClick: jest.fn()
 };
 
 function render(args) {
